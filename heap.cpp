@@ -64,13 +64,61 @@ int* corrige(int* vet, int n){ // void para int*
         i++;
     }
 }
+// codigo reaproveitado
+
+struct NODE{
+    int elem;
+    NODE* r; //right (endereço)
+    NODE* l; //left (endereço)
+};
+
+NODE* criaArvore(int elem){
+    NODE* first = new NODE;
+    first->elem = elem;
+    first->r=NULL;
+    first->l=NULL;
+    return(first);
+}
+
+int estaVazia(NODE* root){
+    if(root == NULL)
+        return 1; // 1 para sim
+    else 
+        return 0; // 0 para não 
+}
+NODE* insere(NODE* root, int elem){
+    bool pass = false; // se torna true para evitar que um nó à direita seja visitado após inserir na esquerda
+    if(estaVazia(root)){
+        NODE* node = new NODE;
+        node = criaArvore(elem);
+        return(node);
+    }else{
+        if(root->l != NULL && root->r != NULL)
+            insere(root->l,elem);
+        if(root->l == NULL){
+            root->l = insere(root->l,elem);
+            pass = true;
+        }
+        else if(root->r == NULL && pass == false){
+            root->r = insere(root->r,elem);
+        }
+    }
+    return(root);
+}
+
+int imprimir(NODE* root){ // ideia de imprimir por níveis 
+    if(estaVazia(root)){
+        printf("\nerror\n");
+        return(0);
+    }    
+}
 
 int main(){
     int* vet = NULL;
     int n = 0; // tamanho vetor
     int cont = 0;
-    
-    int* recebe_vet = NULL;
+    NODE* root = new NODE;
+    int* recebe_vet = NULL; //criado para receber possível correção de ordem dos elementos
 
     printf("\ninsira tamanho entrada:\n");
     scanf("%d",&n);
@@ -90,6 +138,15 @@ int main(){
     while(cont < n){
         printf("vet[%d] = %d\n",cont,recebe_vet[cont]);
         cont++;
+    }
+
+    cont = 0;
+    root = NULL;
+
+    while(cont<n){
+        root = insere(root,recebe_vet[cont]);
+        //insere(root,recebe_vet[]);
+        cont ++;
     }
 
     return 0;
